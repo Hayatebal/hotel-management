@@ -11,7 +11,7 @@
     $checkedOut = \App\Models\Reservation::where('status', 'checked_out')->count();
 
     $totalPayments = \App\Models\Payment::count();
-    $revenue = \App\Models\Payment::sum('amount_paid');
+    $revenue = \App\Models\Payment::sum('amount');
 @endphp
 
 <x-app-layout>
