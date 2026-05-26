@@ -190,7 +190,7 @@ class ReservationController extends Controller
             return back()->with('error', 'Check-in receipt is only available after check-in.');
         }
 
-        $pdf = Pdf::loadView('reservations.checkin-receipt', compact('reservation'));
+        $pdf = Pdf::loadView('reservations.receipt', compact('reservation'));
 
         return $pdf->download('check-in-receipt-' . $reservation->id . '.pdf');
     }
