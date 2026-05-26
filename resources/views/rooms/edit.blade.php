@@ -49,8 +49,7 @@
                         </option>
                     </select>
                 </div>
-                           required>
-                </div>
+                          
 
                 <div class="mb-3">
                     <label>Price per Hour</label>
@@ -59,7 +58,7 @@
                            step="0.01"
                            name="price_per_hour"
                            value="{{ $room->price_per_hour }}"
-                           class="form-control"
+                           class="form-control"            
                            required>
                 </div>
 

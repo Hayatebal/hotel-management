@@ -44,7 +44,9 @@
                             @if($room->status == 'available')
                                 <span class="badge bg-success">Available</span>
                             @elseif($room->status == 'occupied')
-                                <span class="badge bg-danger">Occupied</span>
+                                <span class="badge bg-danger">Occupied</span>                           
+                            @elseif($room->status == 'maintenance')
+                                <span class="badge bg-secondary">Maintenance</span>
                             @else
                                 <span class="badge bg-warning">Reserved</span>
                             @endif

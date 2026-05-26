@@ -40,13 +40,26 @@
                     </select>
                 </div>
 
-                <div class="mb-3">
-                    <label>Check In</label>
-                    <input type="datetime-local"
-                           name="check_in"
-                           value="{{ date('Y-m-d\TH:i', strtotime($reservation->check_in)) }}"
-                           class="form-control"
-                           required>
+                <div class="row">
+
+                    <div class="col-md-6 mb-3">
+                        <label>Check In</label>
+
+                        <input type="datetime-local"
+                            name="check_in"
+                            class="form-control"
+                            required>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label>Check Out</label>
+
+                        <input type="datetime-local"
+                            name="check_out"
+                            class="form-control"
+                            required>
+                    </div>
+
                 </div>
 
                 <div class="mb-3">
