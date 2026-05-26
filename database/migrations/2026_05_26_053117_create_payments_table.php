@@ -16,7 +16,7 @@ public function up()
         $table->foreignId('reservation_id')->constrained()->cascadeOnDelete();
         $table->decimal('amount',10,2);
         $table->string('payment_method');
-        $table->enum('status',['Pending','Paid'])->default('Pending');
+        $table->enum('status',['pending','paid','cancelled'])->default('pending');
         $table->timestamps();
     });
 }

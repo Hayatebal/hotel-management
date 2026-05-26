@@ -16,7 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger('room_id');
 
             $table->dateTime('check_in');
-            $table->dateTime('check_out')->nullable();
+            $table->dateTime('check_out');
 
             $table->integer('duration_hours')->default(0);
 

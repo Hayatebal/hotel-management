@@ -83,6 +83,8 @@
                     <select name="status" class="form-control" required>
                         <option value="pending">Pending</option>
                         <option value="checked_in">Checked In</option>
+                        <option value="checked_out">Checked Out</option>
+                        <option value="cancelled">Cancelled</option>
                     </select>
                 </div>
 
