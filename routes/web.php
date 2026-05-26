@@ -29,9 +29,6 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/reservations/{id}/checkin', [ReservationController::class, 'checkin'])
         ->name('reservations.checkin');
 
-    Route::post('/reservations/{id}/checkout', [ReservationController::class, 'checkout'])
-        ->name('reservations.checkout');
-
     Route::get('/reservations/{reservation}/checkin-receipt', [ReservationController::class, 'checkinReceipt'])
         ->name('reservations.checkinReceipt');
 

@@ -30,8 +30,11 @@
                 </thead>
 
                 <tbody>
+
                     @forelse($reservations as $reservation)
+
                         <tr>
+
                             <td>
                                 {{ $reservation->guest->first_name ?? '' }}
                                 {{ $reservation->guest->last_name ?? '' }}
@@ -41,21 +44,50 @@
                                 Room {{ $reservation->room->room_number ?? 'N/A' }}
                             </td>
 
-                            <td>{{ $reservation->check_in }}</td>
+                            <td>
+                                {{ $reservation->check_in }}
+                            </td>
 
-                            <td>{{ $reservation->check_out ?? 'N/A' }}</td>
+                            <td>
+                                {{ $reservation->check_out ?? 'N/A' }}
+                            </td>
 
                             <td>
                                 ₱{{ number_format($reservation->final_amount ?? 0, 2) }}
                             </td>
 
                             <td>
-                                <span class="badge bg-info">
-                                    {{ ucfirst(str_replace('_', ' ', $reservation->status)) }}
-                                </span>
+
+                                @if($reservation->status == 'pending')
+                                    <span class="badge bg-secondary">
+                                        Pending
+                                    </span>
+
+                                @elseif($reservation->status == 'reserved')
+                                    <span class="badge bg-warning">
+                                        Reserved
+                                    </span>
+
+                                @elseif($reservation->status == 'checked_in')
+                                    <span class="badge bg-primary">
+                                        Checked In
+                                    </span>
+
+                                @elseif($reservation->status == 'checked_out')
+                                    <span class="badge bg-success">
+                                        Checked Out
+                                    </span>
+
+                                @else
+                                    <span class="badge bg-danger">
+                                        Cancelled
+                                    </span>
+                                @endif
+
                             </td>
 
                             <td>
+
                                 <a href="{{ route('reservations.edit', $reservation) }}"
                                    class="btn btn-warning btn-sm mb-1">
                                     Edit
@@ -64,55 +96,64 @@
                                 <form action="{{ route('reservations.destroy', $reservation) }}"
                                       method="POST"
                                       class="d-inline">
+
                                     @csrf
                                     @method('DELETE')
 
                                     <button onclick="return confirm('Delete this reservation?')"
                                             class="btn btn-danger btn-sm mb-1">
+
                                         Delete
+
                                     </button>
+
                                 </form>
 
+                                {{-- CHECK IN BUTTON ONLY --}}
                                 @if($reservation->status === 'pending' || $reservation->status === 'reserved')
+
                                     <form action="{{ route('reservations.checkin', $reservation->id) }}"
                                           method="POST"
                                           class="d-inline">
+
                                         @csrf
 
                                         <button class="btn btn-primary btn-sm mb-1">
                                             Check In
                                         </button>
+
                                     </form>
+
                                 @endif
 
-                                @if($reservation->status === 'checked_in')
-                                    <form action="{{ route('reservations.checkout', $reservation->id) }}"
-                                          method="POST"
-                                          class="d-inline">
-                                        @csrf
-
-                                        <button class="btn btn-dark btn-sm mb-1">
-                                            Check Out
-                                        </button>
-                                    </form>
-                                @endif
-
+                                {{-- CHECK-IN RECEIPT --}}
                                 @if(in_array($reservation->status, ['checked_in', 'checked_out']))
+
                                     <a href="{{ route('reservations.checkinReceipt', $reservation->id) }}"
                                        class="btn btn-success btn-sm mb-1">
+
                                         Check-in Receipt
+
                                     </a>
+
                                 @endif
+
                             </td>
+
                         </tr>
+
                     @empty
+
                         <tr>
                             <td colspan="7" class="text-center">
                                 No reservations found.
                             </td>
                         </tr>
+
                     @endforelse
+
                 </tbody>
+
             </table>
 
         </div>
