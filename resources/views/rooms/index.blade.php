@@ -37,8 +37,8 @@
 
                     <tr>
                         <td>{{ $room->room_number }}</td>
-                        <td>{{ $room->type }}</td>
-                        <td>₱{{ number_format($room->price, 2) }}</td>
+                        <td>{{ $room->room_type }}</td>
+                        <td>₱{{ number_format($room->price_per_hour, 2) }}</td>
 
                         <td>
                             @if($room->status == 'available')

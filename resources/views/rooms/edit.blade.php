@@ -26,22 +26,39 @@
                 </div>
 
                 <div class="mb-3">
-                    <label>Room Type</label>
+                    <label>Select Room Type</label>
 
-                    <input type="text"
-                           name="type"
-                           value="{{ $room->type }}"
-                           class="form-control"
+                    <select name="room_type" class="form-control">
+                        <option value="single" {{ $room->room_type == 'single' ? 'selected' : '' }}>
+                            Single
+                        </option>
+                        <option value="double" {{ $room->room_type == 'double' ? 'selected' : '' }}>
+                            Double
+                        </option>
+
+                        <option value="double" {{ $room->room_type == 'deluxe' ? 'selected' : '' }}>
+                            Deluxe
+                        </option>
+
+                        <option value="suite" {{ $room->room_type == 'suite' ? 'selected' : '' }}>
+                            Suite
+                        </option>
+
+                        <option value="double" {{ $room->room_type == 'family' ? 'selected' : '' }}>
+                            Family
+                        </option>
+                    </select>
+                </div>
                            required>
                 </div>
 
                 <div class="mb-3">
-                    <label>Price</label>
+                    <label>Price per Hour</label>
 
                     <input type="number"
                            step="0.01"
-                           name="price"
-                           value="{{ $room->price }}"
+                           name="price_per_hour"
+                           value="{{ $room->price_per_hour }}"
                            class="form-control"
                            required>
                 </div>
@@ -61,6 +78,10 @@
 
                         <option value="reserved" {{ $room->status == 'reserved' ? 'selected' : '' }}>
                             Reserved
+                        </option>
+
+                        <option value="maintenance" {{ $room->status == 'maintenance' ? 'selected' : '' }}>
+                            Maintenance
                         </option>
 
                     </select>
