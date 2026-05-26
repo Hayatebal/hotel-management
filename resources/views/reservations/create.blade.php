@@ -63,7 +63,7 @@
                 </div>
 
                 <div class="mb-3">
-                    <label>Extended Amount</label>
+                    <label>Added Amount</label>
                     <input type="number" name="extended_amount" id="extended_amount" class="form-control" readonly>
                 </div>
 

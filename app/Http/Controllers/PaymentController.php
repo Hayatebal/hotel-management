@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Payment;
 use App\Models\Reservation;
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class PaymentController extends Controller
 {
@@ -117,4 +118,17 @@ class PaymentController extends Controller
             ->route('payments.index')
             ->with('success', 'Payment Deleted Successfully');
     }
+
+    public function receipt(Payment $payment)
+{
+    if ($payment->status !== 'paid') {
+        return back()->with('error', 'Receipt is only available for paid payments.');
+    }
+
+    $payment->load(['reservation.guest', 'reservation.room']);
+
+    $pdf = Pdf::loadView('payments.receipt', compact('payment'));
+
+    return $pdf->download('receipt-payment-' . $payment->id . '.pdf');
+}
 }

@@ -96,6 +96,13 @@
 
                             <td>
 
+                                @if($payment->status === 'paid')
+                                    <a href="{{ route('payments.receipt', $payment->id) }}"
+                                    class="btn btn-success btn-sm">
+                                        Print
+                                    </a>
+                                @endif
+
                                 <a href="{{ route('payments.edit', $payment) }}"
                                    class="btn btn-warning btn-sm">
 

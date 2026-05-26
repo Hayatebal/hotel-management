@@ -14,27 +14,29 @@ Route::get('/', function () {
 
 Route::middleware(['auth'])->group(function () {
 
-    // Dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])
         ->name('dashboard');
 
-    // Profile
     Route::get('/profile', function () {
         return view('profile');
     })->name('profile.edit');
 
-    // Modules
     Route::resource('rooms', RoomController::class);
     Route::resource('guests', GuestController::class);
     Route::resource('reservations', ReservationController::class);
     Route::resource('payments', PaymentController::class);
 
-    // Reservation Actions
-    Route::get('checkin/{id}', [ReservationController::class, 'checkin'])
+    Route::post('/reservations/{id}/checkin', [ReservationController::class, 'checkin'])
         ->name('reservations.checkin');
 
-    Route::get('checkout/{id}', [ReservationController::class, 'checkout'])
+    Route::post('/reservations/{id}/checkout', [ReservationController::class, 'checkout'])
         ->name('reservations.checkout');
+
+    Route::get('/reservations/{reservation}/checkin-receipt', [ReservationController::class, 'checkinReceipt'])
+        ->name('reservations.checkinReceipt');
+
+    Route::get('/payments/{payment}/checkout-receipt', [PaymentController::class, 'checkoutReceipt'])
+        ->name('payments.checkoutReceipt');
 });
 
 require __DIR__.'/auth.php';
