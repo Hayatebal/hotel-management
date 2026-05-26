@@ -15,7 +15,9 @@
                     <select name="guest_id" class="form-control" required>
                         <option value="">Select Guest</option>
                         @foreach($guests as $guest)
-                            <option value="{{ $guest->id }}">{{ $guest->name }}</option>
+                            <option value="{{ $guest->id }}">
+                                {{ $guest->first_name }} {{ $guest->last_name }}
+                            </option>
                         @endforeach
                     </select>
                 </div>
@@ -25,14 +27,10 @@
                     <select name="room_id" id="room_id" class="form-control" required>
                         <option value="">Select Room</option>
                         @foreach($rooms as $room)
-                            <option value="{{ $room->id }}"
-                                data-price-3hrs="{{ $room->price_3hrs ?? 0 }}"
-                                data-price-6hrs="{{ $room->price_6hrs ?? 0 }}"
-                                data-price-8hrs="{{ $room->price_8hrs ?? 0 }}"
-                                data-price-12hrs="{{ $room->price_12hrs ?? 0 }}"
-                                data-price-24hrs="{{ $room->price_24hrs ?? 0 }}"
-                                data-overtime-fee="{{ $room->overtime_fee_per_hour ?? 0 }}">
-                                Room {{ $room->room_number }} - {{ $room->room_type ?? $room->type }}
+                            <option value="{{ $room->id }}" data-price="{{ $room->price ?? 0 }}">
+                                Room {{ $room->room_number }}
+                                - {{ $room->room_type ?? $room->type }}
+                                - ₱{{ number_format($room->price ?? 0, 2) }}/hour
                             </option>
                         @endforeach
                     </select>
@@ -44,25 +42,35 @@
                 </div>
 
                 <div class="mb-3">
-                    <label>Duration</label>
-                    <select name="duration_type" id="duration_type" class="form-control" required>
+                    <label>Duration Hours</label>
+                    <select name="duration_hours" id="duration_hours" class="form-control" required>
                         <option value="">Select Duration</option>
-                        <option value="3hrs">3 Hours</option>
-                        <option value="6hrs">6 Hours</option>
-                        <option value="8hrs">8 Hours</option>
-                        <option value="12hrs">12 Hours</option>
-                        <option value="24hrs">24 Hours</option>
+                        <option value="3">3 Hours</option>
+                        <option value="6">6 Hours</option>
+                        <option value="8">8 Hours</option>
+                        <option value="12">12 Hours</option>
+                        <option value="24">24 Hours</option>
                     </select>
                 </div>
 
                 <div class="mb-3">
+                    <label>Price Per Hour</label>
+                    <input type="number" id="price_per_hour" class="form-control" readonly>
+                </div>
+
+                <div class="mb-3">
                     <label>Total Amount</label>
-                    <input type="number" name="total_amount" id="total_amount" class="form-control" readonly>
+                    <input type="number" id="total_amount" class="form-control" readonly>
                 </div>
 
                 <div class="mb-3">
                     <label>Extended Hours</label>
                     <input type="number" name="extended_hours" id="extended_hours" value="0" min="0" class="form-control">
+                </div>
+
+                <div class="mb-3">
+                    <label>Extended Amount</label>
+                    <input type="number" id="extended_amount" class="form-control" readonly>
                 </div>
 
                 <div class="mb-3">
@@ -87,27 +95,33 @@
 
 <script>
     const roomSelect = document.getElementById('room_id');
-    const durationSelect = document.getElementById('duration_type');
-    const totalAmount = document.getElementById('total_amount');
-    const extendedHours = document.getElementById('extended_hours');
-    const finalAmount = document.getElementById('final_amount');
+    const durationSelect = document.getElementById('duration_hours');
+    const extendedHoursInput = document.getElementById('extended_hours');
 
-    function updateAmount() {
+    const pricePerHourInput = document.getElementById('price_per_hour');
+    const totalAmountInput = document.getElementById('total_amount');
+    const extendedAmountInput = document.getElementById('extended_amount');
+    const finalAmountInput = document.getElementById('final_amount');
+
+    function calculateAmount() {
         const selectedRoom = roomSelect.options[roomSelect.selectedIndex];
-        const duration = durationSelect.value;
 
-        const price = parseFloat(selectedRoom.getAttribute('data-price-' + duration)) || 0;
-        const overtimeFee = parseFloat(selectedRoom.getAttribute('data-overtime-fee')) || 0;
-        const hours = parseInt(extendedHours.value) || 0;
+        const pricePerHour = parseFloat(selectedRoom.getAttribute('data-price')) || 0;
+        const durationHours = parseInt(durationSelect.value) || 0;
+        const extendedHours = parseInt(extendedHoursInput.value) || 0;
 
-        const finalTotal = price + (hours * overtimeFee);
+        const totalAmount = pricePerHour * durationHours;
+        const extendedAmount = pricePerHour * extendedHours;
+        const finalAmount = totalAmount + extendedAmount;
 
-        totalAmount.value = price.toFixed(2);
-        finalAmount.value = finalTotal.toFixed(2);
+        pricePerHourInput.value = pricePerHour.toFixed(2);
+        totalAmountInput.value = totalAmount.toFixed(2);
+        extendedAmountInput.value = extendedAmount.toFixed(2);
+        finalAmountInput.value = finalAmount.toFixed(2);
     }
 
-    roomSelect.addEventListener('change', updateAmount);
-    durationSelect.addEventListener('change', updateAmount);
-    extendedHours.addEventListener('input', updateAmount);
+    roomSelect.addEventListener('change', calculateAmount);
+    durationSelect.addEventListener('change', calculateAmount);
+    extendedHoursInput.addEventListener('input', calculateAmount);
 </script>
 </x-app-layout>
