@@ -8,54 +8,164 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <style>
+
         body {
-            background-color: #f5f3ff;
+            background:
+                linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)),
+                url('{{ asset('images/pngtree-abstract-blur-hotel-lobby-picture-image_15505805.jpg') }}');
+
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+
+            min-height: 100vh;
         }
 
+        /* NAVBAR */
+
         .navbar {
-            background: linear-gradient(90deg, #6a0dad, #8a2be2);
+            background: linear-gradient(90deg, #ff7b00, #ff9500);
+            backdrop-filter: blur(5px);
+
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
         }
 
         .navbar-brand {
             color: white !important;
             font-weight: bold;
+            font-size: 24px;
+            letter-spacing: 1px;
         }
+
+        /* SIDEBAR */
 
         .sidebar {
             min-height: 100vh;
-            background: linear-gradient(180deg, #6a0dad, #4c1d95);
+
+            background: rgba(255, 123, 0, 0.88);
+
+            backdrop-filter: blur(8px);
+
             color: white;
             padding: 20px;
+
+            box-shadow: 4px 0 15px rgba(0,0,0,0.2);
         }
 
         .sidebar a {
-            color: #eee;
+            color: #fff;
             display: block;
-            padding: 10px 12px;
+            padding: 12px 14px;
             text-decoration: none;
-            border-radius: 8px;
-            margin-bottom: 8px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            transition: 0.3s;
+            font-weight: 500;
         }
 
         .sidebar a:hover {
-            background: #8a2be2;
+            background: rgba(255,255,255,0.25);
             color: white;
+            transform: translateX(5px);
         }
+
+        /* CONTENT */
 
         .content {
             min-height: 100vh;
             padding: 20px;
-            background-color: #f5f3ff;
+
+            background: rgba(255,255,255,0.12);
+
+            backdrop-filter: blur(8px);
         }
+
+        /* CARDS */
+
+        .card {
+            border: none;
+            border-radius: 18px;
+
+            background: rgba(255,255,255,0.92);
+
+            backdrop-filter: blur(10px);
+
+            box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+        }
+
+        .card-header {
+            border-top-left-radius: 18px !important;
+            border-top-right-radius: 18px !important;
+
+            background: linear-gradient(90deg, #ff7b00, #ff9500) !important;
+
+            color: white !important;
+
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        /* BUTTONS */
+
+        .btn-primary {
+            background: linear-gradient(90deg, #ff7b00, #ff9500);
+            border: none;
+            border-radius: 10px;
+            font-weight: bold;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(90deg, #e56f00, #ff8800);
+        }
+
+        .btn-warning {
+            border-radius: 8px;
+        }
+
+        .btn-danger {
+            border-radius: 8px;
+        }
+
+        /* USER DROPDOWN */
 
         .dropdown-toggle {
             background-color: white;
-            color: #6a0dad;
+            color: #ff7b00;
             font-weight: bold;
             border: none;
             border-radius: 20px;
             padding: 6px 16px;
         }
+
+        /* TABLES */
+
+        table {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .table-dark {
+            background: linear-gradient(90deg, #ff7b00, #ff9500);
+            color: white;
+        }
+
+        /* BADGES */
+
+        .badge.bg-success {
+            background-color: #28a745 !important;
+        }
+
+        .badge.bg-danger {
+            background-color: #dc3545 !important;
+        }
+
+        .badge.bg-warning {
+            background-color: #ff9500 !important;
+            color: white !important;
+        }
+
     </style>
 </head>
 
@@ -63,7 +173,7 @@
 
 <nav class="navbar">
     <div class="container-fluid d-flex justify-content-between">
-        <span class="navbar-brand">🏨 Hotel Management</span>
+        <span class="navbar-brand">Hotel Management</span>
 
         @auth
             <div class="dropdown">
@@ -84,7 +194,7 @@
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
                             <button class="dropdown-item text-danger">
-                                🚪 Logout
+                                Logout
                             </button>
                         </form>
                     </li>
@@ -100,11 +210,11 @@
         <div class="col-md-2 sidebar">
             <h5 class="fw-bold mb-4">MENU</h5>
 
-            <a href="{{ route('dashboard') }}">📊 Dashboard</a>
-            <a href="{{ route('rooms.index') }}">🛏 Rooms</a>
-            <a href="{{ route('guests.index') }}">👥 Guests</a>
-            <a href="{{ route('reservations.index') }}">📅 Reservations</a>
-            <a href="{{ route('payments.index') }}">💰 Payments</a>
+            <a href="{{ route('dashboard') }}">Dashboard</a>
+            <a href="{{ route('rooms.index') }}">Rooms</a>
+            <a href="{{ route('guests.index') }}">Guests</a>
+            <a href="{{ route('reservations.index') }}">Reservations</a>
+            <a href="{{ route('payments.index') }}">Payments</a>
         </div>
 
         <div class="col-md-10 content">
