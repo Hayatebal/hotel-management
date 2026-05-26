@@ -24,23 +24,53 @@ class ReservationController extends Controller
         return view('reservations.create', compact('guests', 'rooms'));
     }
 
-    public function store(Request $request)
-    {
-        Reservation::create([
-            'guest_id' => $request->guest_id,
-            'room_id' => $request->room_id,
-            'check_in' => $request->check_in,
-            'check_out' => $request->check_out,
-            'status' => 'pending',
-        ]);
+public function store(Request $request)
+{
+    $request->validate([
+        'guest_id' => 'required|exists:guests,id',
+        'room_id' => 'required|exists:rooms,id',
+        'check_in' => 'required|date',
+        'duration_hours' => 'required|integer|min:1',
+        'extended_hours' => 'nullable|integer|min:0',
+        'status' => 'required|string',
+    ]);
 
-        Room::find($request->room_id)?->update([
-            'status' => 'reserved',
-        ]);
+    $room = Room::findOrFail($request->room_id);
 
-        return redirect()->route('reservations.index')
-            ->with('success', 'Reservation created successfully.');
-    }
+    $durationHours = (int) $request->duration_hours;
+    $extendedHours = (int) ($request->extended_hours ?? 0);
+
+    $pricePerHour = $room->price_per_hour;
+    $totalAmount = $pricePerHour * $durationHours;
+    $extendedAmount = $pricePerHour * $extendedHours;
+    $finalAmount = $totalAmount + $extendedAmount;
+
+    $checkOut = date(
+        'Y-m-d H:i:s',
+        strtotime($request->check_in . ' +' . ($durationHours + $extendedHours) . ' hours')
+    );
+
+    Reservation::create([
+        'guest_id' => $request->guest_id,
+        'room_id' => $request->room_id,
+        'check_in' => $request->check_in,
+        'check_out' => $checkOut,
+        'duration_hours' => $durationHours,
+        'price_per_hour' => $pricePerHour,
+        'total_amount' => $totalAmount,
+        'extended_hours' => $extendedHours,
+        'extended_amount' => $extendedAmount,
+        'final_amount' => $finalAmount,
+        'status' => $request->status,
+    ]);
+
+    $room->update([
+        'status' => $request->status === 'checked_in' ? 'occupied' : 'reserved',
+    ]);
+
+    return redirect()->route('reservations.index')
+        ->with('success', 'Reservation created successfully.');
+}
 
     public function edit(Reservation $reservation)
     {

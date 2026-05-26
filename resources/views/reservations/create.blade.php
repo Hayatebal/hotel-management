@@ -27,10 +27,11 @@
                     <select name="room_id" id="room_id" class="form-control" required>
                         <option value="">Select Room</option>
                         @foreach($rooms as $room)
-                            <option value="{{ $room->id }}" data-price="{{ $room->price ?? 0 }}">
+                            <option value="{{ $room->id }}"
+                                    data-price="{{ $room->price_per_hour }}">
                                 Room {{ $room->room_number }}
-                                - {{ $room->room_type ?? $room->type }}
-                                - ₱{{ number_format($room->price ?? 0, 2) }}/hour
+                                - {{ $room->room_type }}
+                                - ₱{{ number_format($room->price_per_hour, 2) }}/hr
                             </option>
                         @endforeach
                     </select>
@@ -43,24 +44,17 @@
 
                 <div class="mb-3">
                     <label>Duration Hours</label>
-                    <select name="duration_hours" id="duration_hours" class="form-control" required>
-                        <option value="">Select Duration</option>
-                        <option value="3">3 Hours</option>
-                        <option value="6">6 Hours</option>
-                        <option value="8">8 Hours</option>
-                        <option value="12">12 Hours</option>
-                        <option value="24">24 Hours</option>
-                    </select>
+                    <input type="number" name="duration_hours" id="duration_hours" class="form-control" min="1" value="1" required>
                 </div>
 
                 <div class="mb-3">
                     <label>Price Per Hour</label>
-                    <input type="number" id="price_per_hour" class="form-control" readonly>
+                    <input type="number" name="price_per_hour" id="price_per_hour" class="form-control" readonly>
                 </div>
 
                 <div class="mb-3">
                     <label>Total Amount</label>
-                    <input type="number" id="total_amount" class="form-control" readonly>
+                    <input type="number" name="total_amount" id="total_amount" class="form-control" readonly>
                 </div>
 
                 <div class="mb-3">
@@ -70,12 +64,12 @@
 
                 <div class="mb-3">
                     <label>Extended Amount</label>
-                    <input type="number" id="extended_amount" class="form-control" readonly>
+                    <input type="number" name="extended_amount" id="extended_amount" class="form-control" readonly>
                 </div>
 
                 <div class="mb-3">
                     <label>Final Amount</label>
-                    <input type="number" id="final_amount" class="form-control" readonly>
+                    <input type="number" name="final_amount" id="final_amount" class="form-control" readonly>
                 </div>
 
                 <div class="mb-3">
@@ -83,8 +77,6 @@
                     <select name="status" class="form-control" required>
                         <option value="pending">Pending</option>
                         <option value="checked_in">Checked In</option>
-                        <option value="checked_out">Checked Out</option>
-                        <option value="cancelled">Cancelled</option>
                     </select>
                 </div>
 
@@ -97,33 +89,32 @@
 
 <script>
     const roomSelect = document.getElementById('room_id');
-    const durationSelect = document.getElementById('duration_hours');
-    const extendedHoursInput = document.getElementById('extended_hours');
+    const durationInput = document.getElementById('duration_hours');
+    const extendedInput = document.getElementById('extended_hours');
 
-    const pricePerHourInput = document.getElementById('price_per_hour');
-    const totalAmountInput = document.getElementById('total_amount');
+    const priceInput = document.getElementById('price_per_hour');
+    const totalInput = document.getElementById('total_amount');
     const extendedAmountInput = document.getElementById('extended_amount');
-    const finalAmountInput = document.getElementById('final_amount');
+    const finalInput = document.getElementById('final_amount');
 
     function calculateAmount() {
         const selectedRoom = roomSelect.options[roomSelect.selectedIndex];
+        const price = parseFloat(selectedRoom.getAttribute('data-price')) || 0;
+        const duration = parseInt(durationInput.value) || 0;
+        const extended = parseInt(extendedInput.value) || 0;
 
-        const pricePerHour = parseFloat(selectedRoom.getAttribute('data-price')) || 0;
-        const durationHours = parseInt(durationSelect.value) || 0;
-        const extendedHours = parseInt(extendedHoursInput.value) || 0;
+        const total = price * duration;
+        const extendedAmount = price * extended;
+        const finalAmount = total + extendedAmount;
 
-        const totalAmount = pricePerHour * durationHours;
-        const extendedAmount = pricePerHour * extendedHours;
-        const finalAmount = totalAmount + extendedAmount;
-
-        pricePerHourInput.value = pricePerHour.toFixed(2);
-        totalAmountInput.value = totalAmount.toFixed(2);
+        priceInput.value = price.toFixed(2);
+        totalInput.value = total.toFixed(2);
         extendedAmountInput.value = extendedAmount.toFixed(2);
-        finalAmountInput.value = finalAmount.toFixed(2);
+        finalInput.value = finalAmount.toFixed(2);
     }
 
     roomSelect.addEventListener('change', calculateAmount);
-    durationSelect.addEventListener('change', calculateAmount);
-    extendedHoursInput.addEventListener('input', calculateAmount);
+    durationInput.addEventListener('input', calculateAmount);
+    extendedInput.addEventListener('input', calculateAmount);
 </script>
 </x-app-layout>

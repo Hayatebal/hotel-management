@@ -9,14 +9,14 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-  public function up()
+public function up(): void
 {
     Schema::create('rooms', function (Blueprint $table) {
         $table->id();
         $table->string('room_number')->unique();
-        $table->string('type');
-        $table->decimal('price', 10, 2);
-        $table->enum('status', ['Available','Occupied'])->default('Available');
+        $table->string('room_type');
+        $table->decimal('price_per_hour', 10, 2)->default(0);
+        $table->enum('status', ['available', 'occupied', 'reserved', 'maintenance'])->default('available');
         $table->timestamps();
     });
 }
