@@ -74,17 +74,12 @@
                 </div>
 
                 <div class="mb-3">
-                    <label>Total Amount</label>
-                    <input type="number" name="total_amount" id="total_amount" value="{{ $reservation->total_amount }}" class="form-control" readonly>
-                </div>
-
-                <div class="mb-3">
                     <label>Extended Hours</label>
                     <input type="number" name="extended_hours" id="extended_hours" value="{{ $reservation->extended_hours ?? 0 }}" min="0" class="form-control">
                 </div>
 
                 <div class="mb-3">
-                    <label>Final Amount</label>
+                    <label>Estimated Amount</label>
                     <input type="number" id="final_amount" value="{{ $reservation->final_amount }}" class="form-control" readonly>
                 </div>
 

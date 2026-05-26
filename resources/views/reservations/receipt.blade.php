@@ -35,16 +35,13 @@
         <th>Expected Check Out</th>
         <td>{{ $reservation->check_out ?? 'N/A' }}</td>
     </tr>
+
     <tr>
-        <th>Total Amount</th>
-        <td>PHP {{ number_format($reservation->total_amount, 2) }}</td>
-    </tr>
-    <tr>
-        <th>Extended Amount</th>
+        <th>Additional Cost</th>
         <td>PHP {{ number_format($reservation->extended_amount, 2) }}</td>
     </tr>
     <tr>
-        <th>Final Amount</th>
+        <th>Estimated Amount</th>
         <td><strong>PHP {{ number_format($reservation->final_amount, 2) }}</strong></td>
     </tr>
     <tr>

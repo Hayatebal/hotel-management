@@ -54,27 +54,12 @@
                 </div>
 
                 <div class="mb-3">
-                    <label>Price Per Hour</label>
-                    <input type="number" name="price_per_hour" id="price_per_hour" class="form-control" readonly>
-                </div>
-
-                <div class="mb-3">
-                    <label>Total Amount</label>
-                    <input type="number" name="total_amount" id="total_amount" class="form-control" readonly>
-                </div>
-
-                <div class="mb-3">
                     <label>Extended Hours</label>
                     <input type="number" name="extended_hours" id="extended_hours" value="0" min="0" class="form-control">
                 </div>
 
                 <div class="mb-3">
-                    <label>Added Amount</label>
-                    <input type="number" name="extended_amount" id="extended_amount" class="form-control" readonly>
-                </div>
-
-                <div class="mb-3">
-                    <label>Final Amount</label>
+                    <label>Estimated Amount</label>
                     <input type="number" name="final_amount" id="final_amount" class="form-control" readonly>
                 </div>
 

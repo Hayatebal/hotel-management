@@ -23,7 +23,7 @@
                         <th>Room</th>
                         <th>Check In</th>
                         <th>Check Out</th>
-                        <th>Final Amount</th>
+                        <th>Estimated Amount</th>
                         <th>Status</th>
                         <th width="280">Actions</th>
                     </tr>
