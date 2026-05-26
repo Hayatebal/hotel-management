@@ -23,10 +23,18 @@ return new class extends Migration
                 ->constrained()
                 ->cascadeOnDelete();
 
-            $table->date('check_in');
+            $table->dateTime('check_in');
+            $table->dateTime('check_out')->nullable();
 
-            $table->date('check_out')
-                ->nullable();
+            $table->integer('duration_hours')->default(0);
+
+            $table->decimal('price_per_hour', 10, 2)->default(0);
+            $table->decimal('total_amount', 10, 2)->default(0);
+
+            $table->integer('extended_hours')->default(0);
+            $table->decimal('extended_amount', 10, 2)->default(0);
+
+            $table->decimal('final_amount', 10, 2)->default(0);
 
             $table->enum('status', [
                 'pending',
@@ -40,9 +48,6 @@ return new class extends Migration
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('reservations');
