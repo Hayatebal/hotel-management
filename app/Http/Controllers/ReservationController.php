@@ -6,12 +6,15 @@ use Illuminate\Http\Request;
 use App\Models\Reservation;
 use App\Models\Room;
 use App\Models\Guest;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class ReservationController extends Controller
 {
     public function index()
     {
-        $reservations = Reservation::with(['room', 'guest'])->get();
+        $reservations = Reservation::with(['room', 'guest'])
+            ->latest()
+            ->get();
 
         return view('reservations.index', compact('reservations'));
     }
@@ -19,58 +22,59 @@ class ReservationController extends Controller
     public function create()
     {
         $guests = Guest::orderBy('first_name')->get();
+
         $rooms = Room::where('status', 'available')->get();
 
         return view('reservations.create', compact('guests', 'rooms'));
     }
 
-public function store(Request $request)
-{
-    $request->validate([
-        'guest_id' => 'required|exists:guests,id',
-        'room_id' => 'required|exists:rooms,id',
-        'check_in' => 'required|date',
-        'duration_hours' => 'required|integer|min:1',
-        'extended_hours' => 'nullable|integer|min:0',
-        'status' => 'required|string',
-    ]);
+    public function store(Request $request)
+    {
+        $request->validate([
+            'guest_id' => 'required|exists:guests,id',
+            'room_id' => 'required|exists:rooms,id',
+            'check_in' => 'required|date',
+            'duration_hours' => 'required|integer|min:1',
+            'extended_hours' => 'nullable|integer|min:0',
+            'status' => 'required|string',
+        ]);
 
-    $room = Room::findOrFail($request->room_id);
+        $room = Room::findOrFail($request->room_id);
 
-    $durationHours = (int) $request->duration_hours;
-    $extendedHours = (int) ($request->extended_hours ?? 0);
+        $durationHours = (int) $request->duration_hours;
+        $extendedHours = (int) ($request->extended_hours ?? 0);
 
-    $pricePerHour = $room->price_per_hour;
-    $totalAmount = $pricePerHour * $durationHours;
-    $extendedAmount = $pricePerHour * $extendedHours;
-    $finalAmount = $totalAmount + $extendedAmount;
+        $pricePerHour = $room->price_per_hour;
+        $totalAmount = $pricePerHour * $durationHours;
+        $extendedAmount = $pricePerHour * $extendedHours;
+        $finalAmount = $totalAmount + $extendedAmount;
 
-    $checkOut = date(
-        'Y-m-d H:i:s',
-        strtotime($request->check_in . ' +' . ($durationHours + $extendedHours) . ' hours')
-    );
+        $checkOut = date(
+            'Y-m-d H:i:s',
+            strtotime($request->check_in . ' +' . ($durationHours + $extendedHours) . ' hours')
+        );
 
-    Reservation::create([
-        'guest_id' => $request->guest_id,
-        'room_id' => $request->room_id,
-        'check_in' => $request->check_in,
-        'check_out' => $checkOut,
-        'duration_hours' => $durationHours,
-        'price_per_hour' => $pricePerHour,
-        'total_amount' => $totalAmount,
-        'extended_hours' => $extendedHours,
-        'extended_amount' => $extendedAmount,
-        'final_amount' => $finalAmount,
-        'status' => $request->status,
-    ]);
+        Reservation::create([
+            'guest_id' => $request->guest_id,
+            'room_id' => $request->room_id,
+            'check_in' => $request->check_in,
+            'check_out' => $checkOut,
+            'duration_hours' => $durationHours,
+            'price_per_hour' => $pricePerHour,
+            'total_amount' => $totalAmount,
+            'extended_hours' => $extendedHours,
+            'extended_amount' => $extendedAmount,
+            'final_amount' => $finalAmount,
+            'status' => $request->status,
+        ]);
 
-    $room->update([
-        'status' => $request->status === 'checked_in' ? 'occupied' : 'reserved',
-    ]);
+        $room->update([
+            'status' => $request->status === 'checked_in' ? 'occupied' : 'reserved',
+        ]);
 
-    return redirect()->route('reservations.index')
-        ->with('success', 'Reservation created successfully.');
-}
+        return redirect()->route('reservations.index')
+            ->with('success', 'Reservation created successfully.');
+    }
 
     public function edit(Reservation $reservation)
     {
@@ -82,26 +86,54 @@ public function store(Request $request)
 
     public function update(Request $request, Reservation $reservation)
     {
+        $request->validate([
+            'guest_id' => 'required|exists:guests,id',
+            'room_id' => 'required|exists:rooms,id',
+            'check_in' => 'required|date',
+            'check_out' => 'required|date',
+            'duration_hours' => 'required|integer|min:1',
+            'extended_hours' => 'nullable|integer|min:0',
+            'status' => 'required|string',
+        ]);
+
         $oldRoomId = $reservation->room_id;
+
+        $room = Room::findOrFail($request->room_id);
+
+        $durationHours = (int) $request->duration_hours;
+        $extendedHours = (int) ($request->extended_hours ?? 0);
+
+        $pricePerHour = $room->price_per_hour;
+        $totalAmount = $pricePerHour * $durationHours;
+        $extendedAmount = $pricePerHour * $extendedHours;
+        $finalAmount = $totalAmount + $extendedAmount;
 
         $reservation->update([
             'guest_id' => $request->guest_id,
             'room_id' => $request->room_id,
             'check_in' => $request->check_in,
             'check_out' => $request->check_out,
+            'duration_hours' => $durationHours,
+            'price_per_hour' => $pricePerHour,
+            'total_amount' => $totalAmount,
+            'extended_hours' => $extendedHours,
+            'extended_amount' => $extendedAmount,
+            'final_amount' => $finalAmount,
             'status' => $request->status,
         ]);
 
         if ($oldRoomId != $request->room_id) {
-            Room::find($oldRoomId)?->update(['status' => 'available']);
+            Room::find($oldRoomId)?->update([
+                'status' => 'available',
+            ]);
         }
 
         if ($request->status === 'checked_in') {
-            Room::find($request->room_id)?->update(['status' => 'occupied']);
+            $room->update(['status' => 'occupied']);
         } elseif ($request->status === 'checked_out' || $request->status === 'cancelled') {
-            Room::find($request->room_id)?->update(['status' => 'available']);
+            $room->update(['status' => 'available']);
         } else {
-            Room::find($request->room_id)?->update(['status' => 'reserved']);
+            $room->update(['status' => 'reserved']);
         }
 
         return redirect()->route('reservations.index')
@@ -148,5 +180,18 @@ public function store(Request $request)
         ]);
 
         return back()->with('success', 'Guest checked out successfully.');
+    }
+
+    public function checkinReceipt(Reservation $reservation)
+    {
+        $reservation->load(['guest', 'room']);
+
+        if (!in_array($reservation->status, ['checked_in', 'checked_out'])) {
+            return back()->with('error', 'Check-in receipt is only available after check-in.');
+        }
+
+        $pdf = Pdf::loadView('reservations.checkin-receipt', compact('reservation'));
+
+        return $pdf->download('check-in-receipt-' . $reservation->id . '.pdf');
     }
 }
