@@ -109,23 +109,6 @@
 
                                 </form>
 
-                                {{-- CHECK IN BUTTON ONLY --}}
-                                @if($reservation->status === 'pending' || $reservation->status === 'reserved')
-
-                                    <form action="{{ route('reservations.checkin', $reservation->id) }}"
-                                          method="POST"
-                                          class="d-inline">
-
-                                        @csrf
-
-                                        <button class="btn btn-primary btn-sm mb-1">
-                                            Check In
-                                        </button>
-
-                                    </form>
-
-                                @endif
-
                                 {{-- CHECK-IN RECEIPT --}}
                                 @if(in_array($reservation->status, ['checked_in', 'checked_out']))
 

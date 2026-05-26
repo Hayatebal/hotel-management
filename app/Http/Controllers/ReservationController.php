@@ -22,7 +22,6 @@ class ReservationController extends Controller
     public function create()
     {
         $guests = Guest::orderBy('first_name')->get();
-
         $rooms = Room::where('status', 'available')->get();
 
         return view('reservations.create', compact('guests', 'rooms'));
@@ -49,16 +48,11 @@ class ReservationController extends Controller
         $extendedAmount = $pricePerHour * $extendedHours;
         $finalAmount = $totalAmount + $extendedAmount;
 
-        $checkOut = date(
-            'Y-m-d H:i:s',
-            strtotime($request->check_in . ' +' . ($durationHours + $extendedHours) . ' hours')
-        );
-
         Reservation::create([
             'guest_id' => $request->guest_id,
             'room_id' => $request->room_id,
             'check_in' => $request->check_in,
-            'check_out' => $checkOut,
+            'check_out' => null,
             'duration_hours' => $durationHours,
             'price_per_hour' => $pricePerHour,
             'total_amount' => $totalAmount,
@@ -89,15 +83,13 @@ class ReservationController extends Controller
         $request->validate([
             'guest_id' => 'required|exists:guests,id',
             'room_id' => 'required|exists:rooms,id',
-            'check_in' => 'required|date',
-            'check_out' => 'required|date',
+            'check_out' => 'nullable|date',
             'duration_hours' => 'required|integer|min:1',
             'extended_hours' => 'nullable|integer|min:0',
             'status' => 'required|string',
         ]);
 
         $oldRoomId = $reservation->room_id;
-
         $room = Room::findOrFail($request->room_id);
 
         $durationHours = (int) $request->duration_hours;
@@ -111,8 +103,8 @@ class ReservationController extends Controller
         $reservation->update([
             'guest_id' => $request->guest_id,
             'room_id' => $request->room_id,
-            'check_in' => $request->check_in,
-            'check_out' => $request->check_out,
+            'check_in' => $reservation->check_in,
+            'check_out' => $request->check_out ?: null,
             'duration_hours' => $durationHours,
             'price_per_hour' => $pricePerHour,
             'total_amount' => $totalAmount,
@@ -123,9 +115,7 @@ class ReservationController extends Controller
         ]);
 
         if ($oldRoomId != $request->room_id) {
-            Room::find($oldRoomId)?->update([
-                'status' => 'available',
-            ]);
+            Room::find($oldRoomId)?->update(['status' => 'available']);
         }
 
         if ($request->status === 'checked_in') {
@@ -142,9 +132,7 @@ class ReservationController extends Controller
 
     public function destroy(Reservation $reservation)
     {
-        $reservation->room?->update([
-            'status' => 'available',
-        ]);
+        $reservation->room?->update(['status' => 'available']);
 
         $reservation->delete();
 
@@ -165,21 +153,6 @@ class ReservationController extends Controller
         ]);
 
         return back()->with('success', 'Guest checked in successfully.');
-    }
-
-    public function checkout($id)
-    {
-        $reservation = Reservation::findOrFail($id);
-
-        $reservation->update([
-            'status' => 'checked_out',
-        ]);
-
-        $reservation->room?->update([
-            'status' => 'available',
-        ]);
-
-        return back()->with('success', 'Guest checked out successfully.');
     }
 
     public function checkinReceipt(Reservation $reservation)

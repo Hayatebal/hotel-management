@@ -43,8 +43,14 @@
                 </div>
 
                 <div class="mb-3">
-                    <label>Duration Hours</label>
-                    <input type="number" name="duration_hours" id="duration_hours" class="form-control" min="1" value="1" required>
+                    <label>Duration</label>
+                    <select name="duration_type" id="duration_type" class="form-control" required>
+                        <option value="3hrs" {{ $reservation->duration_type == '3hrs' ? 'selected' : '' }}>3 Hours</option>
+                        <option value="6hrs" {{ $reservation->duration_type == '6hrs' ? 'selected' : '' }}>6 Hours</option>
+                        <option value="8hrs" {{ $reservation->duration_type == '8hrs' ? 'selected' : '' }}>8 Hours</option>
+                        <option value="12hrs" {{ $reservation->duration_type == '12hrs' ? 'selected' : '' }}>12 Hours</option>
+                        <option value="24hrs" {{ $reservation->duration_type == '24hrs' ? 'selected' : '' }}>24 Hours</option>
+                    </select>
                 </div>
 
                 <div class="mb-3">
@@ -89,7 +95,7 @@
 
 <script>
     const roomSelect = document.getElementById('room_id');
-    const durationInput = document.getElementById('duration_hours');
+    const durationInput = document.getElementById('duration_type');
     const extendedInput = document.getElementById('extended_hours');
 
     const priceInput = document.getElementById('price_per_hour');
