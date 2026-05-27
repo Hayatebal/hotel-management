@@ -71,8 +71,6 @@
 
                     </div>
 
-</div>
-
                 </div>
 
                 <div class="mb-3">
@@ -137,6 +135,6 @@
     roomSelect.addEventListener('change', updateAmount);
     durationSelect.addEventListener('change', updateAmount);
     extendedHours.addEventListener('input', updateAmount);
-    
+
 </script>
 </x-app-layout>
