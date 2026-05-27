@@ -27,12 +27,14 @@ return new class extends Migration
                 'PayPal'
             ]);
 
-            $table->dateTime('payment_date');
+            $table->string('reference_number')->nullable();
 
             $table->enum('status', [
                 'pending',
                 'paid'
             ])->default('pending');
+
+            $table->timestamp('payment_date')->useCurrent();
 
             $table->timestamps();
         });

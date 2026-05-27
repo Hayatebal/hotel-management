@@ -131,6 +131,11 @@
     </tr>
 
     <tr>
+        <th>Reference Number</th>
+        <td>{{ $payment->reference_number }}</td>
+    </tr>
+
+    <tr>
         <th>Payment Status</th>
         <td>{{ ucfirst($payment->status) }}</td>
     </tr>

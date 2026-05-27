@@ -28,11 +28,11 @@
                         <th>Room</th>
                         <th>Final Amount</th>
                         <th>Amount Paid</th>
-                        <th>Balance</th>
                         <th>Method</th>
-                        <th>Status</th>
                         <th>Reference</th>
-                        <th width="180">Actions</th>
+                        <th>Payment Date</th>
+                        <th>Status</th>
+                        <th width="220">Actions</th>
                     </tr>
                 </thead>
 
@@ -43,7 +43,8 @@
                         <tr>
 
                             <td>
-                                {{ $payment->reservation->guest->name ?? 'N/A' }}
+                                {{ $payment->reservation->guest->first_name ?? '' }}
+                                {{ $payment->reservation->guest->last_name ?? '' }}
                             </td>
 
                             <td>
@@ -55,11 +56,7 @@
                             </td>
 
                             <td>
-                                ₱{{ number_format($payment->amount_paid, 2) }}
-                            </td>
-
-                            <td>
-                                ₱{{ number_format($payment->balance, 2) }}
+                                ₱{{ number_format($payment->amount, 2) }}
                             </td>
 
                             <td>
@@ -67,23 +64,28 @@
                             </td>
 
                             <td>
+                                {{ $payment->reference_number ?? 'N/A' }}
+                            </td>
 
-                                @if($payment->payment_status == 'paid')
+                            <td>
+                                {{ $payment->payment_date
+                                    ? \Carbon\Carbon::parse($payment->payment_date)->format('M d, Y h:i A')
+                                    : 'N/A'
+                                }}
+                            </td>
+
+                            <td>
+
+                                @if($payment->status == 'paid')
 
                                     <span class="badge bg-success">
                                         Paid
                                     </span>
 
-                                @elseif($payment->payment_status == 'partial')
-
-                                    <span class="badge bg-warning">
-                                        Partial
-                                    </span>
-
                                 @else
 
-                                    <span class="badge bg-danger">
-                                        Unpaid
+                                    <span class="badge bg-warning">
+                                        Pending
                                     </span>
 
                                 @endif
@@ -91,16 +93,16 @@
                             </td>
 
                             <td>
-                                {{ $payment->reference_number ?? 'N/A' }}
-                            </td>
-
-                            <td>
 
                                 @if($payment->status === 'paid')
-                                    <a href="{{ route('payments.receipt', $payment->id) }}"
-                                    class="btn btn-success btn-sm">
+
+                                    <a href="{{ route('payments.checkoutReceipt', $payment->id) }}"
+                                       class="btn btn-success btn-sm">
+
                                         Print
+
                                     </a>
+
                                 @endif
 
                                 <a href="{{ route('payments.edit', $payment) }}"

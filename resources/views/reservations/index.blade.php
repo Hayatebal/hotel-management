@@ -88,6 +88,18 @@
 
                             <td>
 
+                              {{-- CHECK-IN RECEIPT --}}
+                                @if(in_array($reservation->status, ['checked_in', 'checked_out']))
+
+                                    <a href="{{ route('reservations.checkinReceipt', $reservation->id) }}"
+                                       class="btn btn-success btn-sm mb-1">
+
+                                        Print
+
+                                    </a>
+
+                                @endif
+
                                 <a href="{{ route('reservations.edit', $reservation) }}"
                                    class="btn btn-warning btn-sm mb-1">
                                     Edit
@@ -108,18 +120,6 @@
                                     </button>
 
                                 </form>
-
-                                {{-- CHECK-IN RECEIPT --}}
-                                @if(in_array($reservation->status, ['checked_in', 'checked_out']))
-
-                                    <a href="{{ route('reservations.checkinReceipt', $reservation->id) }}"
-                                       class="btn btn-success btn-sm mb-1">
-
-                                        Check-in Receipt
-
-                                    </a>
-
-                                @endif
 
                             </td>
 

@@ -49,6 +49,16 @@
     </select>
     </div>
 
+    <div class="mb-3">
+    <label>Reference Number</label>
+
+    <input type="text"
+           name="reference_number"
+           class="form-control"
+           placeholder="Enter Reference Number">
+    </div>
+
+
                 <button class="btn btn-primary">Save Payment</button>
             </form>
         </div>

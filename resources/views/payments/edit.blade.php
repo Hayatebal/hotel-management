@@ -102,6 +102,16 @@
                     </select>
                 </div>
 
+                    <div class="mb-3">
+                        <label>Reference Number</label>
+
+                        <input type="text"
+                            name="reference_number"
+                            class="form-control"
+                            placeholder="Enter Reference Number"
+                            value="{{ $payment->reference_number }}" readonly>
+                        </div>
+
                 <div class="mb-3">
                     <label>Status</label>
 

@@ -21,12 +21,9 @@ class PaymentController extends Controller
 
     public function create()
     {
-        $reservations = Reservation::with([
-            'guest',
-            'room'
-        ])
-        ->where('status', 'checked_out')
-        ->get();
+        $reservations = Reservation::with(['guest', 'room'])
+            ->where('status', 'checked_out')
+            ->get();
 
         return view('payments.create', compact('reservations'));
     }
@@ -37,11 +34,10 @@ class PaymentController extends Controller
             'reservation_id' => 'required|exists:reservations,id',
             'amount' => 'required|numeric|min:0',
             'payment_method' => 'required|string',
+            'reference_number' => 'nullable|string|max:255',
         ]);
 
-        $reservation = Reservation::findOrFail(
-            $request->reservation_id
-        );
+        $reservation = Reservation::findOrFail($request->reservation_id);
 
         $paymentStatus =
             $request->amount >= $reservation->final_amount
@@ -52,6 +48,7 @@ class PaymentController extends Controller
             'reservation_id' => $request->reservation_id,
             'amount' => $request->amount,
             'payment_method' => $request->payment_method,
+            'reference_number' => $request->reference_number,
             'payment_date' => now(),
             'status' => $paymentStatus,
         ]);
@@ -68,12 +65,9 @@ class PaymentController extends Controller
             'reservation.room'
         ]);
 
-        $reservations = Reservation::with([
-            'guest',
-            'room'
-        ])
-        ->where('status', 'checked_out')
-        ->get();
+        $reservations = Reservation::with(['guest', 'room'])
+            ->where('status', 'checked_out')
+            ->get();
 
         return view(
             'payments.edit',
@@ -87,11 +81,10 @@ class PaymentController extends Controller
             'reservation_id' => 'required|exists:reservations,id',
             'amount' => 'required|numeric|min:0',
             'payment_method' => 'required|string',
+            'reference_number' => 'nullable|string|max:255',
         ]);
 
-        $reservation = Reservation::findOrFail(
-            $request->reservation_id
-        );
+        $reservation = Reservation::findOrFail($request->reservation_id);
 
         $paymentStatus =
             $request->amount >= $reservation->final_amount
@@ -102,6 +95,7 @@ class PaymentController extends Controller
             'reservation_id' => $request->reservation_id,
             'amount' => $request->amount,
             'payment_method' => $request->payment_method,
+            'reference_number' => $request->reference_number,
             'payment_date' => now(),
             'status' => $paymentStatus,
         ]);
@@ -123,7 +117,6 @@ class PaymentController extends Controller
     public function checkoutReceipt(Payment $payment)
     {
         if ($payment->status !== 'paid') {
-
             return back()->with(
                 'error',
                 'Check-out receipt is only available for fully paid payments.'
