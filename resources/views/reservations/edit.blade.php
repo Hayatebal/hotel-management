@@ -129,14 +129,16 @@
 
                 <div class="mb-3">
 
-                    <label>Extended Hours</label>
+                    <label>Extended Time</label>
 
-                    <input type="number"
-                           name="extended_hours"
-                           id="extended_hours"
-                           value="{{ $reservation->extended_hours ?? 0 }}"
-                           min="0"
-                           class="form-control">
+                    <input type="text"
+                        id="extended_display"
+                        class="form-control"
+                        readonly>
+
+                    <input type="hidden"
+                        name="extended_hours"
+                        id="extended_hours">
 
                 </div>
 
@@ -216,7 +218,7 @@
         const total = price * duration;
 
         let extendedHoursDecimal = 0;
-        let displayText = "0 hour 0 minute";
+        let displayText = "0 Days : 0 Hours : 0 Minutes";
 
         if (checkoutInput.value) {
             const checkout = new Date(checkoutInput.value);
@@ -229,11 +231,13 @@
             if (diffMs > 0) {
                 const totalMinutes = Math.floor(diffMs / 60000);
 
-                const hours = Math.floor(totalMinutes / 60);
+                const days = Math.floor(totalMinutes / 1440);
+                const hours = Math.floor((totalMinutes % 1440) / 60);
                 const minutes = totalMinutes % 60;
 
                 extendedHoursDecimal = totalMinutes / 60;
-                displayText = `${hours} hour(s) ${minutes} minute(s)`;
+
+                displayText = `${days} Days : ${hours} Hours : ${minutes} Minutes`;
             }
         }
 
@@ -248,6 +252,7 @@
     }
 
     roomSelect.addEventListener('change', calculateAmount);
+    checkoutInput.addEventListener('input', calculateAmount);
     checkoutInput.addEventListener('change', calculateAmount);
 
     calculateAmount();
