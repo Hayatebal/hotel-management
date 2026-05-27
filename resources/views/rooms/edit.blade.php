@@ -36,7 +36,7 @@
                             Double
                         </option>
 
-                        <option value="double" {{ $room->room_type == 'deluxe' ? 'selected' : '' }}>
+                        <option value="deluxe" {{ $room->room_type == 'deluxe' ? 'selected' : '' }}>
                             Deluxe
                         </option>
 
@@ -44,7 +44,7 @@
                             Suite
                         </option>
 
-                        <option value="double" {{ $room->room_type == 'family' ? 'selected' : '' }}>
+                        <option value="family" {{ $room->room_type == 'family' ? 'selected' : '' }}>
                             Family
                         </option>
                     </select>
