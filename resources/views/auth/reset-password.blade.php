@@ -1,7 +1,42 @@
 <x-guest-layout>
 
-    <div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-950 via-purple-800 to-indigo-700 px-6">
+    <div class="min-h-screen flex items-center justify-center px-6 bg-cover bg-center"
+         style="background-image: url('{{ asset('images/pngtree-abstract-blur-hotel-lobby-picture-image_15505805.jpg') }}');">
+        <div class="w-full max-w-md bg-white rounded-3xl shadow-2xl p-8">
 
+            <div class="text-center mb-8">
+
+                <h1 class="text-4xl font-bold text-orange-600">
+                    La Luna Hotel
+                </h1>
+
+                <p class="text-gray-600 mt-2">
+                    Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.
+                </p>
+
+            </div>
+
+            <x-auth-session-status class="mb-4" :status="session('status')" />
+
+            <form method="POST" action="{{ route('password.email') }}">
+                @csrf
+
+                <div>
+                    <x-input-label for="email" value="Email" />
+
+                    <x-text-input id="email"
+                                  class="block mt-1 w-full rounded-xl border-orange-200 focus:border-orange-500 focus:ring-orange-500"
+                                  type="email"
+                                  name="email"
+                                  :value="old('email')"
+                                  required
+                                  autofocus
+                                  autocomplete="username" />
+
+                    <x-input-error :messages="$errors->get('email')" class="mt-2" />
+                </div>
+
+                <div class="flex items
         <div class="w-full max-w-md bg-white rounded-3xl shadow-2xl p-8">
 
             <div class="text-center mb-8">

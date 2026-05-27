@@ -4,59 +4,66 @@
     <title>Check-out Receipt</title>
 
     <style>
-        body{
+        body {
             font-family: DejaVu Sans, sans-serif;
-            padding:20px;
-            font-size:14px;
+            padding: 20px;
+            font-size: 14px;
         }
 
-        .header{
-            text-align:center;
-            margin-bottom:30px;
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
         }
 
-        .hotel{
-            font-size:28px;
-            font-weight:bold;
-            color:#ff7b00;
+        .hotel {
+            font-size: 28px;
+            font-weight: bold;
+            color: #ff7b00;
         }
 
-        .subtitle{
-            font-size:16px;
+        .subtitle {
+            font-size: 16px;
         }
 
-        table{
-            width:100%;
-            border-collapse:collapse;
-            margin-top:20px;
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
         }
 
-        th, td{
-            border:1px solid #ddd;
-            padding:10px;
-            text-align:left;
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
         }
 
-        th{
-            background:#ff9500;
-            color:white;
-            width:35%;
+        th {
+            background: #ff9500;
+            color: white;
+            width: 35%;
         }
 
-        .amount{
-            font-size:18px;
-            font-weight:bold;
-            color:#ff7b00;
+        .amount {
+            font-size: 18px;
+            font-weight: bold;
+            color: #ff7b00;
         }
 
-        .footer{
-            margin-top:40px;
-            text-align:center;
+        .footer {
+            margin-top: 40px;
+            text-align: center;
         }
     </style>
 </head>
 
 <body>
+
+@php
+    $finalAmount = $payment->reservation->final_amount ?? 0;
+    $amountPaid = $payment->amount ?? 0;
+    $balance = max($finalAmount - $amountPaid, 0);
+    $exchange = max($amountPaid - $finalAmount, 0);
+@endphp
 
 <div class="header">
     <div class="hotel">La Luna Hotel</div>
@@ -64,7 +71,6 @@
 </div>
 
 <table>
-
     <tr>
         <th>Guest Name</th>
         <td>
@@ -100,12 +106,12 @@
 
     <tr>
         <th>Price Per Hour</th>
-        <td>₱{{ number_format($payment->reservation->price_per_hour,2) }}</td>
+        <td>PHP {{ number_format($payment->reservation->price_per_hour, 2) }}</td>
     </tr>
 
     <tr>
         <th>Total Amount</th>
-        <td>₱{{ number_format($payment->reservation->total_amount,2) }}</td>
+        <td>PHP {{ number_format($payment->reservation->total_amount, 2) }}</td>
     </tr>
 
     <tr>
@@ -114,15 +120,28 @@
     </tr>
 
     <tr>
-        <th>Extended Amount</th>
-        <td>₱{{ number_format($payment->reservation->extended_amount,2) }}</td>
+        <th>Additional Amount</th>
+        <td>PHP {{ number_format($payment->reservation->extended_amount, 2) }}</td>
     </tr>
 
     <tr>
-        <th>Final Amount Paid</th>
-        <td class="amount">
-            ₱{{ number_format($payment->amount,2) }}
-        </td>
+        <th>Final Amount</th>
+        <td class="amount">PHP {{ number_format($finalAmount, 2) }}</td>
+    </tr>
+
+    <tr>
+        <th>Amount Paid</th>
+        <td>PHP {{ number_format($amountPaid, 2) }}</td>
+    </tr>
+
+    <tr>
+        <th>Balance</th>
+        <td>PHP {{ number_format($balance, 2) }}</td>
+    </tr>
+
+    <tr>
+        <th>Exchange Amount</th>
+        <td>PHP {{ number_format($exchange, 2) }}</td>
     </tr>
 
     <tr>
@@ -132,21 +151,22 @@
 
     <tr>
         <th>Reference Number</th>
-        <td>{{ $payment->reference_number }}</td>
+        <td>{{ $payment->reference_number ?? 'N/A' }}</td>
     </tr>
 
     <tr>
         <th>Payment Status</th>
         <td>{{ ucfirst($payment->status) }}</td>
     </tr>
+
+    <tr>
         <th>Payment Date</th>
         <td>{{ \Carbon\Carbon::parse($payment->payment_date)->format('M d, Y h:i A') }}</td>
-    <tr>
-
+    </tr>
 </table>
 
 <div class="footer">
-    Thank you for staying at La Luna Hotel.
+    Thank you for staying at La Luna Hotel! We hope to see you again soon.
 </div>
 
 </body>

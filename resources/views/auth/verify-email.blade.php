@@ -1,6 +1,7 @@
 <x-guest-layout>
 
-    <div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-950 via-purple-800 to-indigo-700 px-6">
+    <div class="min-h-screen flex items-center justify-center px-6 bg-cover bg-center"
+         style="background-image: url('{{ asset('images/pngtree-abstract-blur-hotel-lobby-picture-image_15505805.jpg') }}');">
 
         <div class="w-full max-w-lg bg-white rounded-3xl shadow-2xl p-8">
 

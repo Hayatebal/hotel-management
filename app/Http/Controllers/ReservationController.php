@@ -83,50 +83,76 @@ class ReservationController extends Controller
         $request->validate([
             'guest_id' => 'required|exists:guests,id',
             'room_id' => 'required|exists:rooms,id',
+            'check_in' => 'required|date',
             'check_out' => 'nullable|date',
-            'duration_hours' => 'required|integer|min:1',
+            'duration_hours' => 'required|numeric|min:1',
             'extended_hours' => 'nullable|numeric|min:0',
             'status' => 'required|string',
         ]);
 
-        $oldRoomId = $reservation->room_id;
         $room = Room::findOrFail($request->room_id);
 
-        $durationHours = (int) $request->duration_hours;
-        $extendedHours = (int) ($request->extended_hours ?? 0);
-
         $pricePerHour = $room->price_per_hour;
+
+        $durationHours = $request->duration_hours;
+
+        $extendedHours = $request->extended_hours ?? 0;
+
         $totalAmount = $pricePerHour * $durationHours;
+
         $extendedAmount = $pricePerHour * $extendedHours;
+
         $finalAmount = $totalAmount + $extendedAmount;
 
         $reservation->update([
+
             'guest_id' => $request->guest_id,
+
             'room_id' => $request->room_id,
-            'check_in' => $reservation->check_in,
-            'check_out' => $request->check_out ?: null,
+
+            'check_in' => $request->check_in,
+
+            'check_out' => $request->check_out,
+
             'duration_hours' => $durationHours,
+
             'price_per_hour' => $pricePerHour,
+
             'total_amount' => $totalAmount,
+
             'extended_hours' => $extendedHours,
+
             'extended_amount' => $extendedAmount,
+
             'final_amount' => $finalAmount,
+
             'status' => $request->status,
         ]);
 
-        if ($oldRoomId != $request->room_id) {
-            Room::find($oldRoomId)?->update(['status' => 'available']);
-        }
+        if ($request->status == 'checked_in') {
 
-        if ($request->status === 'checked_in') {
-            $room->update(['status' => 'occupied']);
-        } elseif ($request->status === 'checked_out' || $request->status === 'cancelled') {
-            $room->update(['status' => 'available']);
+            $room->update([
+                'status' => 'occupied'
+            ]);
+
+        } elseif (
+            $request->status == 'checked_out' ||
+            $request->status == 'cancelled'
+        ) {
+
+            $room->update([
+                'status' => 'available'
+            ]);
+
         } else {
-            $room->update(['status' => 'reserved']);
+
+            $room->update([
+                'status' => 'reserved'
+            ]);
         }
 
-        return redirect()->route('reservations.index')
+        return redirect()
+            ->route('reservations.index')
             ->with('success', 'Reservation updated successfully.');
     }
 

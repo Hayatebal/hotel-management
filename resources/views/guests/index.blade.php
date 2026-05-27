@@ -106,7 +106,7 @@
                     @endforelse
 
                 </tbody>
-+
+
             </table>
 
         </div>
