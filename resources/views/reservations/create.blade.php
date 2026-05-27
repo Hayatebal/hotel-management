@@ -85,32 +85,35 @@
 
 <script>
     const roomSelect = document.getElementById('room_id');
-    const durationInput = document.getElementById('duration_type');
-    const extendedInput = document.getElementById('extended_hours');
+    const durationInput = document.getElementById('duration_hours');
 
     const priceInput = document.getElementById('price_per_hour');
     const totalInput = document.getElementById('total_amount');
-    const extendedAmountInput = document.getElementById('extended_amount');
     const finalInput = document.getElementById('final_amount');
 
     function calculateAmount() {
-        const selectedRoom = roomSelect.options[roomSelect.selectedIndex];
-        const price = parseFloat(selectedRoom.getAttribute('data-price')) || 0;
-        const duration = parseInt(durationInput.value) || 0;
-        const extended = parseInt(extendedInput.value) || 0;
 
-        const total = price * duration;
-        const extendedAmount = price * extended;
-        const finalAmount = total + extendedAmount;
+        const selectedRoom =
+            roomSelect.options[roomSelect.selectedIndex];
+
+        const price =
+            parseFloat(selectedRoom.getAttribute('data-price')) || 0;
+
+        const duration =
+            parseInt(durationInput.value) || 0;
+
+        const total =
+            price * duration;
 
         priceInput.value = price.toFixed(2);
+
         totalInput.value = total.toFixed(2);
-        extendedAmountInput.value = extendedAmount.toFixed(2);
-        finalInput.value = finalAmount.toFixed(2);
+
+        finalInput.value = total.toFixed(2);
     }
 
     roomSelect.addEventListener('change', calculateAmount);
-    durationInput.addEventListener('input', calculateAmount);
-    extendedInput.addEventListener('input', calculateAmount);
+
+    durationInput.addEventListener('change', calculateAmount);
 </script>
 </x-app-layout>

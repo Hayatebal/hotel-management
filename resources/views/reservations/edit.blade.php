@@ -7,36 +7,54 @@
         </div>
 
         <div class="card-body">
+
             <form action="{{ route('reservations.update', $reservation) }}" method="POST">
+
                 @csrf
                 @method('PUT')
 
                 <div class="mb-3">
                     <label>Guest</label>
+
                     <select name="guest_id" class="form-control" required>
+
                         @foreach($guests as $guest)
-                            <option value="{{ $guest->id }}" {{ $reservation->guest_id == $guest->id ? 'selected' : '' }}>
-                                {{ $guest->name }}
+
+                            <option value="{{ $guest->id }}"
+                                {{ $reservation->guest_id == $guest->id ? 'selected' : '' }}>
+
+                                {{ $guest->first_name }}
+                                {{ $guest->last_name }}
+
                             </option>
+
                         @endforeach
+
                     </select>
                 </div>
 
                 <div class="mb-3">
                     <label>Room</label>
-                    <select name="room_id" id="room_id" class="form-control" required>
+
+                    <select name="room_id"
+                            id="room_id"
+                            class="form-control"
+                            required>
+
                         @foreach($rooms as $room)
+
                             <option value="{{ $room->id }}"
-                                data-price-3hrs="{{ $room->price_3hrs ?? 0 }}"
-                                data-price-6hrs="{{ $room->price_6hrs ?? 0 }}"
-                                data-price-8hrs="{{ $room->price_8hrs ?? 0 }}"
-                                data-price-12hrs="{{ $room->price_12hrs ?? 0 }}"
-                                data-price-24hrs="{{ $room->price_24hrs ?? 0 }}"
-                                data-overtime-fee="{{ $room->overtime_fee_per_hour ?? 0 }}"
-                                {{ $reservation->room_id == $room->id ? 'selected' : '' }}>
-                                Room {{ $room->room_number }} - {{ $room->room_type ?? $room->type }}
+                                    data-price="{{ $room->price_per_hour }}"
+                                    {{ $reservation->room_id == $room->id ? 'selected' : '' }}>
+
+                                Room {{ $room->room_number }}
+                                - {{ $room->room_type }}
+                                - ₱{{ number_format($room->price_per_hour, 2) }}/hr
+
                             </option>
+
                         @endforeach
+
                     </select>
                 </div>
 
@@ -47,13 +65,13 @@
                         <label>Check In</label>
 
                         <input type="datetime-local"
-                            class="form-control"
-                            value="{{ \Carbon\Carbon::parse($reservation->check_in)->format('Y-m-d\TH:i') }}"
-                            readonly>
+                               class="form-control"
+                               value="{{ \Carbon\Carbon::parse($reservation->check_in)->format('Y-m-d\TH:i') }}"
+                               readonly>
 
                         <input type="hidden"
-                            name="check_in"
-                            value="{{ $reservation->check_in }}">
+                               name="check_in"
+                               value="{{ $reservation->check_in }}">
 
                     </div>
 
@@ -62,79 +80,174 @@
                         <label>Check Out</label>
 
                         <input type="datetime-local"
-                            name="check_out"
-                            class="form-control"
-                            value="{{ $reservation->check_out 
-                                    ? \Carbon\Carbon::parse($reservation->check_out)->format('Y-m-d\TH:i') 
-                                    : '' }}"
-                            required>
+                               name="check_out"
+                               class="form-control"
+                               value="{{ $reservation->check_out ? \Carbon\Carbon::parse($reservation->check_out)->format('Y-m-d\TH:i') : '' }}">
 
                     </div>
 
                 </div>
 
                 <div class="mb-3">
-                    <label>Duration</label>
-                    <select name="duration_type" id="duration_type" class="form-control" required>
-                        <option value="3hrs" {{ $reservation->duration_type == '3hrs' ? 'selected' : '' }}>3 Hours</option>
-                        <option value="6hrs" {{ $reservation->duration_type == '6hrs' ? 'selected' : '' }}>6 Hours</option>
-                        <option value="8hrs" {{ $reservation->duration_type == '8hrs' ? 'selected' : '' }}>8 Hours</option>
-                        <option value="12hrs" {{ $reservation->duration_type == '12hrs' ? 'selected' : '' }}>12 Hours</option>
-                        <option value="24hrs" {{ $reservation->duration_type == '24hrs' ? 'selected' : '' }}>24 Hours</option>
-                    </select>
+
+                    <label>Duration Hours</label>
+
+                    <input type="number"
+                           class="form-control"
+                           value="{{ $reservation->duration_hours }}"
+                           readonly>
+
+                    <input type="hidden"
+                           name="duration_hours"
+                           value="{{ $reservation->duration_hours }}">
+
                 </div>
 
                 <div class="mb-3">
+
+                    <label>Price Per Hour</label>
+
+                    <input type="number"
+                           id="price_per_hour"
+                           class="form-control"
+                           value="{{ $reservation->price_per_hour }}"
+                           readonly>
+
+                </div>
+
+                <div class="mb-3">
+
+                    <label>Total Amount</label>
+
+                    <input type="number"
+                           id="total_amount"
+                           class="form-control"
+                           value="{{ $reservation->total_amount }}"
+                           readonly>
+
+                </div>
+
+                <div class="mb-3">
+
                     <label>Extended Hours</label>
-                    <input type="number" name="extended_hours" id="extended_hours" value="{{ $reservation->extended_hours ?? 0 }}" min="0" class="form-control">
+
+                    <input type="number"
+                           name="extended_hours"
+                           id="extended_hours"
+                           value="{{ $reservation->extended_hours ?? 0 }}"
+                           min="0"
+                           class="form-control">
+
                 </div>
 
                 <div class="mb-3">
-                    <label>Estimated Amount</label>
-                    <input type="number" id="final_amount" value="{{ $reservation->final_amount }}" class="form-control" readonly>
+
+                    <label>Final Amount</label>
+
+                    <input type="number"
+                           id="final_amount"
+                           class="form-control"
+                           value="{{ $reservation->final_amount }}"
+                           readonly>
+
                 </div>
 
                 <div class="mb-3">
+
                     <label>Status</label>
-                    <select name="status" class="form-control" required>
-                        <option value="pending" {{ $reservation->status == 'pending' ? 'selected' : '' }}>Pending</option>
-                        <option value="checked_in" {{ $reservation->status == 'checked_in' ? 'selected' : '' }}>Checked In</option>
-                        <option value="checked_out" {{ $reservation->status == 'checked_out' ? 'selected' : '' }}>Checked Out</option>
-                        <option value="cancelled" {{ $reservation->status == 'cancelled' ? 'selected' : '' }}>Cancelled</option>
+
+                    <select name="status"
+                            class="form-control"
+                            required>
+
+                        <option value="pending"
+                            {{ $reservation->status == 'pending' ? 'selected' : '' }}>
+                            Pending
+                        </option>
+
+                        <option value="checked_in"
+                            {{ $reservation->status == 'checked_in' ? 'selected' : '' }}>
+                            Checked In
+                        </option>
+
+                        <option value="checked_out"
+                            {{ $reservation->status == 'checked_out' ? 'selected' : '' }}>
+                            Checked Out
+                        </option>
+
+                        <option value="cancelled"
+                            {{ $reservation->status == 'cancelled' ? 'selected' : '' }}>
+                            Cancelled
+                        </option>
+
                     </select>
+
                 </div>
 
-                <button class="btn btn-warning">Update Reservation</button>
+                <button class="btn btn-warning">
+                    Update Reservation
+                </button>
+
             </form>
+
         </div>
     </div>
 
 </div>
 
 <script>
-    const roomSelect = document.getElementById('room_id');
-    const durationSelect = document.getElementById('duration_type');
-    const totalAmount = document.getElementById('total_amount');
-    const extendedHours = document.getElementById('extended_hours');
-    const finalAmount = document.getElementById('final_amount');
 
-    function updateAmount() {
-        const selectedRoom = roomSelect.options[roomSelect.selectedIndex];
-        const duration = durationSelect.value;
+    const roomSelect =
+        document.getElementById('room_id');
 
-        const price = parseFloat(selectedRoom.getAttribute('data-price-' + duration)) || 0;
-        const overtimeFee = parseFloat(selectedRoom.getAttribute('data-overtime-fee')) || 0;
-        const hours = parseInt(extendedHours.value) || 0;
+    const extendedInput =
+        document.getElementById('extended_hours');
 
-        const finalTotal = price + (hours * overtimeFee);
+    const priceInput =
+        document.getElementById('price_per_hour');
 
-        totalAmount.value = price.toFixed(2);
-        finalAmount.value = finalTotal.toFixed(2);
+    const totalInput =
+        document.getElementById('total_amount');
+
+    const finalInput =
+        document.getElementById('final_amount');
+
+    function calculateAmount() {
+
+        const selectedRoom =
+            roomSelect.options[roomSelect.selectedIndex];
+
+        const price =
+            parseFloat(selectedRoom.getAttribute('data-price')) || 0;
+
+        const duration =
+            parseInt({{ $reservation->duration_hours }}) || 0;
+
+        const extended =
+            parseInt(extendedInput.value) || 0;
+
+        const total =
+            price * duration;
+
+        const finalAmount =
+            total + (price * extended);
+
+        priceInput.value =
+            price.toFixed(2);
+
+        totalInput.value =
+            total.toFixed(2);
+
+        finalInput.value =
+            finalAmount.toFixed(2);
     }
 
-    roomSelect.addEventListener('change', updateAmount);
-    durationSelect.addEventListener('change', updateAmount);
-    extendedHours.addEventListener('input', updateAmount);
+    roomSelect.addEventListener('change', calculateAmount);
+
+    extendedInput.addEventListener('input', calculateAmount);
+
+    calculateAmount();
 
 </script>
+
 </x-app-layout>
