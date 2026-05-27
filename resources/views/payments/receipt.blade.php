@@ -139,6 +139,9 @@
         <th>Payment Status</th>
         <td>{{ ucfirst($payment->status) }}</td>
     </tr>
+        <th>Payment Date</th>
+        <td>{{ \Carbon\Carbon::parse($payment->payment_date)->format('M d, Y h:i A') }}</td>
+    <tr>
 
 </table>
 

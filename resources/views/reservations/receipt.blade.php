@@ -3,12 +3,55 @@
 <head>
     <title>Check-in Receipt</title>
     <style>
-        body { font-family: DejaVu Sans, sans-serif; font-size: 14px; }
-        .header { text-align: center; margin-bottom: 25px; }
-        h1 { color: #ff7b00; margin-bottom: 0; }
-        table { width: 100%; border-collapse: collapse; }
-        th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
-        th { background: #ff9500; color: white; }
+        body{
+            font-family: DejaVu Sans, sans-serif;
+            padding:20px;
+            font-size:14px;
+        }
+
+        .header{
+            text-align:center;
+            margin-bottom:30px;
+        }
+
+        .hotel{
+            font-size:28px;
+            font-weight:bold;
+            color:#ff7b00;
+        }
+
+        .subtitle{
+            font-size:16px;
+        }
+
+        table{
+            width:100%;
+            border-collapse:collapse;
+            margin-top:20px;
+        }
+
+        th, td{
+            border:1px solid #ddd;
+            padding:10px;
+            text-align:left;
+        }
+
+        th{
+            background:#ff9500;
+            color:white;
+            width:35%;
+        }
+
+        .amount{
+            font-size:18px;
+            font-weight:bold;
+            color:#ff7b00;
+        }
+
+        .footer{
+            margin-top:40px;
+            text-align:center;
+        }
     </style>
 </head>
 <body>
