@@ -85,7 +85,7 @@ class ReservationController extends Controller
             'room_id' => 'required|exists:rooms,id',
             'check_out' => 'nullable|date',
             'duration_hours' => 'required|integer|min:1',
-            'extended_hours' => 'nullable|integer|min:0',
+            'extended_hours' => 'nullable|numeric|min:0',
             'status' => 'required|string',
         ]);
 

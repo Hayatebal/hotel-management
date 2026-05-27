@@ -196,58 +196,61 @@
 </div>
 
 <script>
+    const roomSelect = document.getElementById('room_id');
+    const checkoutInput = document.getElementById('check_out');
 
-    const roomSelect =
-        document.getElementById('room_id');
+    const extendedHidden = document.getElementById('extended_hours');
+    const extendedDisplay = document.getElementById('extended_display');
 
-    const extendedInput =
-        document.getElementById('extended_hours');
+    const priceInput = document.getElementById('price_per_hour');
+    const totalInput = document.getElementById('total_amount');
+    const finalInput = document.getElementById('final_amount');
 
-    const priceInput =
-        document.getElementById('price_per_hour');
-
-    const totalInput =
-        document.getElementById('total_amount');
-
-    const finalInput =
-        document.getElementById('final_amount');
+    const checkIn = new Date("{{ \Carbon\Carbon::parse($reservation->check_in)->format('Y-m-d\TH:i') }}");
+    const duration = parseInt({{ $reservation->duration_hours }}) || 0;
 
     function calculateAmount() {
+        const selectedRoom = roomSelect.options[roomSelect.selectedIndex];
+        const price = parseFloat(selectedRoom.getAttribute('data-price')) || 0;
 
-        const selectedRoom =
-            roomSelect.options[roomSelect.selectedIndex];
+        const total = price * duration;
 
-        const price =
-            parseFloat(selectedRoom.getAttribute('data-price')) || 0;
+        let extendedHoursDecimal = 0;
+        let displayText = "0 hour 0 minute";
 
-        const duration =
-            parseInt({{ $reservation->duration_hours }}) || 0;
+        if (checkoutInput.value) {
+            const checkout = new Date(checkoutInput.value);
 
-        const extended =
-            parseInt(extendedInput.value) || 0;
+            const expectedCheckout = new Date(checkIn);
+            expectedCheckout.setHours(expectedCheckout.getHours() + duration);
 
-        const total =
-            price * duration;
+            const diffMs = checkout - expectedCheckout;
 
-        const finalAmount =
-            total + (price * extended);
+            if (diffMs > 0) {
+                const totalMinutes = Math.floor(diffMs / 60000);
 
-        priceInput.value =
-            price.toFixed(2);
+                const hours = Math.floor(totalMinutes / 60);
+                const minutes = totalMinutes % 60;
 
-        totalInput.value =
-            total.toFixed(2);
+                extendedHoursDecimal = totalMinutes / 60;
+                displayText = `${hours} hour(s) ${minutes} minute(s)`;
+            }
+        }
 
-        finalInput.value =
-            finalAmount.toFixed(2);
+        const extendedAmount = price * extendedHoursDecimal;
+        const finalAmount = total + extendedAmount;
+
+        priceInput.value = price.toFixed(2);
+        totalInput.value = total.toFixed(2);
+        extendedHidden.value = extendedHoursDecimal.toFixed(2);
+        extendedDisplay.value = displayText;
+        finalInput.value = finalAmount.toFixed(2);
     }
 
     roomSelect.addEventListener('change', calculateAmount);
-
-    extendedInput.addEventListener('input', calculateAmount);
+    checkoutInput.addEventListener('change', calculateAmount);
 
     calculateAmount();
-
 </script>
 
 </x-app-layout>
