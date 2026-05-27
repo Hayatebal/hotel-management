@@ -16,7 +16,13 @@ return new class extends Migration
                 ->constrained('reservations')
                 ->cascadeOnDelete();
 
-            $table->decimal('amount', 10, 2);
+            // Reservation Amount
+            $table->decimal('final_amount', 10, 2)->default(0);
+
+            // Payment Details
+            $table->decimal('amount', 10, 2)->default(0);
+
+            $table->decimal('balance', 10, 2)->default(0);
 
             $table->enum('payment_method', [
                 'Cash',
