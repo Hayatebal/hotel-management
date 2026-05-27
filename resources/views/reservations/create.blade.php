@@ -39,39 +39,34 @@
 
                 <div class="mb-3">
                     <label>Check In</label>
-                    <input type="datetime-local" name="check_in" class="form-control" required>
+                    <input type="datetime-local"
+                           name="check_in"
+                           class="form-control"
+                           required>
                 </div>
 
                 <div class="mb-3">
                     <label>Duration Hours</label>
-
                     <select name="duration_hours"
                             id="duration_hours"
                             class="form-control"
                             required>
-
+                        <option value="">Select Duration</option>
                         <option value="3">3 Hours</option>
                         <option value="6">6 Hours</option>
                         <option value="8">8 Hours</option>
                         <option value="12">12 Hours</option>
                         <option value="24">24 Hours</option>
-
                     </select>
                 </div>
 
                 <div class="mb-3">
-                    <label>Extended Hours</label>
-                    <input type="number" name="extended_hours" id="extended_hours" value="0" min="0" class="form-control">
-                </div>
-
-                <div class="mb-3">
-                    <label>Additional Cost</label>
-                    <input type="text" name="total" id="total" class="form-control" readonly>
-                </div>
-
-                <div class="mb-3">
                     <label>Estimated Amount</label>
-                    <input type="number" name="final_amount" id="final_amount" class="form-control" readonly>
+                    <input type="number"
+                           name="final_amount"
+                           id="final_amount"
+                           class="form-control"
+                           readonly>
                 </div>
 
                 <div class="mb-3">
@@ -82,7 +77,9 @@
                     </select>
                 </div>
 
-                <button class="btn btn-primary">Save Reservation</button>
+                <button class="btn btn-primary">
+                    Save Reservation
+                </button>
             </form>
         </div>
     </div>
@@ -92,34 +89,20 @@
 <script>
     const roomSelect = document.getElementById('room_id');
     const durationInput = document.getElementById('duration_hours');
-
-    const priceInput = document.getElementById('price_per_hour');
-    const totalInput = document.getElementById('total_amount');
     const finalInput = document.getElementById('final_amount');
 
     function calculateAmount() {
+        const selectedRoom = roomSelect.options[roomSelect.selectedIndex];
 
-        const selectedRoom =
-            roomSelect.options[roomSelect.selectedIndex];
+        const price = parseFloat(selectedRoom.getAttribute('data-price')) || 0;
+        const duration = parseInt(durationInput.value) || 0;
 
-        const price =
-            parseFloat(selectedRoom.getAttribute('data-price')) || 0;
+        const estimatedAmount = price * duration;
 
-        const duration =
-            parseInt(durationInput.value) || 0;
-
-        const total =
-            price * duration;
-
-        priceInput.value = price.toFixed(2);
-
-        totalInput.value = total.toFixed(2);
-
-        finalInput.value = total.toFixed(2);
+        finalInput.value = estimatedAmount.toFixed(2);
     }
 
     roomSelect.addEventListener('change', calculateAmount);
-
     durationInput.addEventListener('change', calculateAmount);
 </script>
 </x-app-layout>
