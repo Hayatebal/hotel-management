@@ -43,13 +43,19 @@
                 </div>
 
                 <div class="mb-3">
-                    <label>Duration</label>
-                    <select name="duration_type" id="duration_type" class="form-control" required>
-                        <option value="3hrs" {{ $reservation->duration_type == '3hrs' ? 'selected' : '' }}>3 Hours</option>
-                        <option value="6hrs" {{ $reservation->duration_type == '6hrs' ? 'selected' : '' }}>6 Hours</option>
-                        <option value="8hrs" {{ $reservation->duration_type == '8hrs' ? 'selected' : '' }}>8 Hours</option>
-                        <option value="12hrs" {{ $reservation->duration_type == '12hrs' ? 'selected' : '' }}>12 Hours</option>
-                        <option value="24hrs" {{ $reservation->duration_type == '24hrs' ? 'selected' : '' }}>24 Hours</option>
+                    <label>Duration Hours</label>
+
+                    <select name="duration_hours"
+                            id="duration_hours"
+                            class="form-control"
+                            required>
+
+                        <option value="3">3 Hours</option>
+                        <option value="6">6 Hours</option>
+                        <option value="8">8 Hours</option>
+                        <option value="12">12 Hours</option>
+                        <option value="24">24 Hours</option>
+
                     </select>
                 </div>
 
