@@ -24,10 +24,9 @@ class PaymentController extends Controller
         $reservations = Reservation::with([
             'guest',
             'room'
-        ])->whereIn('status', [
-            'checked_in',
-            'checked_out'
-        ])->get();
+        ])
+        ->where('status', 'checked_out')
+        ->get();
 
         return view('payments.create', compact('reservations'));
     }
@@ -72,7 +71,9 @@ class PaymentController extends Controller
         $reservations = Reservation::with([
             'guest',
             'room'
-        ])->get();
+        ])
+        ->where('status', 'checked_out')
+        ->get();
 
         return view(
             'payments.edit',
@@ -119,16 +120,28 @@ class PaymentController extends Controller
             ->with('success', 'Payment Deleted Successfully');
     }
 
-    public function receipt(Payment $payment)
-{
-    if ($payment->status !== 'paid') {
-        return back()->with('error', 'Receipt is only available for paid payments.');
+    public function checkoutReceipt(Payment $payment)
+    {
+        if ($payment->status !== 'paid') {
+
+            return back()->with(
+                'error',
+                'Check-out receipt is only available for fully paid payments.'
+            );
+        }
+
+        $payment->load([
+            'reservation.guest',
+            'reservation.room'
+        ]);
+
+        $pdf = Pdf::loadView(
+            'payments.receipt',
+            compact('payment')
+        );
+
+        return $pdf->download(
+            'checkout-receipt-' . $payment->id . '.pdf'
+        );
     }
-
-    $payment->load(['reservation.guest', 'reservation.room']);
-
-    $pdf = Pdf::loadView('payments.receipt', compact('payment'));
-
-    return $pdf->download('receipt-payment-' . $payment->id . '.pdf');
-}
 }
