@@ -59,6 +59,11 @@
                 </div>
 
                 <div class="mb-3">
+                    <label>Additional Cost</label>
+                    <input type="text" name="total" id="total" class="form-control" readonly>
+                </div>
+
+                <div class="mb-3">
                     <label>Estimated Amount</label>
                     <input type="number" name="final_amount" id="final_amount" class="form-control" readonly>
                 </div>

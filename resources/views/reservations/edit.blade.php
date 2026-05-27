@@ -43,22 +43,35 @@
                 <div class="row">
 
                     <div class="col-md-6 mb-3">
+
                         <label>Check In</label>
 
                         <input type="datetime-local"
-                            name="check_in"
                             class="form-control"
-                            required>
+                            value="{{ \Carbon\Carbon::parse($reservation->check_in)->format('Y-m-d\TH:i') }}"
+                            readonly>
+
+                        <input type="hidden"
+                            name="check_in"
+                            value="{{ $reservation->check_in }}">
+
                     </div>
 
                     <div class="col-md-6 mb-3">
+
                         <label>Check Out</label>
 
                         <input type="datetime-local"
                             name="check_out"
                             class="form-control"
+                            value="{{ $reservation->check_out 
+                                    ? \Carbon\Carbon::parse($reservation->check_out)->format('Y-m-d\TH:i') 
+                                    : '' }}"
                             required>
+
                     </div>
+
+</div>
 
                 </div>
 
@@ -124,5 +137,6 @@
     roomSelect.addEventListener('change', updateAmount);
     durationSelect.addEventListener('change', updateAmount);
     extendedHours.addEventListener('input', updateAmount);
+    
 </script>
 </x-app-layout>

@@ -7,7 +7,7 @@
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    <style>
+        <style>
 
         body {
             background:
@@ -20,53 +20,79 @@
             background-attachment: fixed;
 
             min-height: 100vh;
+            overflow-x: hidden;
         }
 
         /* NAVBAR */
 
         .navbar {
-            background: linear-gradient(90deg, #ff7b00, #ff9500);
-            backdrop-filter: blur(5px);
-
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            background: #ff8800;
+            padding: 15px 20px;
+            position: sticky;
+            top: 0;
+            z-index: 9999;
         }
 
         .navbar-brand {
             color: white !important;
             font-weight: bold;
-            font-size: 24px;
-            letter-spacing: 1px;
+            font-size: 36px;
+        }
+
+        /* PROFILE BUTTON */
+
+        .dropdown-toggle {
+            background: white;
+            color: #ff8800;
+            font-weight: bold;
+            border: none;
+            border-radius: 30px;
+            padding: 10px 18px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+
+        .dropdown-menu {
+            border-radius: 15px;
+            border: none;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            overflow: hidden;
+            z-index: 99999;
+        }
+
+        .dropdown-item {
+            padding: 12px 18px;
+            font-weight: 500;
         }
 
         /* SIDEBAR */
 
         .sidebar {
             min-height: 100vh;
-
-            background: rgba(255, 123, 0, 0.88);
-
+            background: rgba(255, 136, 0, 0.95);
+            padding: 25px 20px;
             backdrop-filter: blur(8px);
+        }
 
+        .sidebar h5 {
             color: white;
-            padding: 20px;
-
-            box-shadow: 4px 0 15px rgba(0,0,0,0.2);
+            font-weight: bold;
+            margin-bottom: 30px;
+            font-size: 30px;
         }
 
         .sidebar a {
-            color: #fff;
             display: block;
-            padding: 12px 14px;
+            color: white;
             text-decoration: none;
-            border-radius: 10px;
-            margin-bottom: 10px;
+            padding: 14px 18px;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            font-weight: 600;
             transition: 0.3s;
-            font-weight: 500;
         }
 
         .sidebar a:hover {
-            background: rgba(255,255,255,0.25);
-            color: white;
+            background: rgba(255,255,255,0.2);
             transform: translateX(5px);
         }
 
@@ -74,96 +100,84 @@
 
         .content {
             min-height: 100vh;
-            padding: 20px;
+            padding: 30px;
 
-            background: rgba(255,255,255,0.12);
+            background:
+                linear-gradient(rgba(255,255,255,0.10),
+                rgba(255,255,255,0.10));
 
-            backdrop-filter: blur(8px);
+            backdrop-filter: blur(6px);
         }
 
         /* CARDS */
 
         .card {
             border: none;
-            border-radius: 18px;
+            border-radius: 24px;
+            overflow: hidden;
 
             background: rgba(255,255,255,0.92);
 
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(12px);
 
-            box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.25);
         }
 
         .card-header {
-            border-top-left-radius: 18px !important;
-            border-top-right-radius: 18px !important;
-
-            background: linear-gradient(90deg, #ff7b00, #ff9500) !important;
-
+            background: #ff8800 !important;
             color: white !important;
-
             font-weight: bold;
-            font-size: 18px;
+            border: none;
+            padding: 18px 25px;
+            font-size: 20px;
+        }
+
+        /* TABLE */
+
+        table {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        .table-dark {
+            background: #222 !important;
+            color: white;
         }
 
         /* BUTTONS */
 
         .btn-primary {
-            background: linear-gradient(90deg, #ff7b00, #ff9500);
+            background: #ff8800;
             border: none;
             border-radius: 10px;
+            padding: 10px 18px;
             font-weight: bold;
         }
 
         .btn-primary:hover {
-            background: linear-gradient(90deg, #e56f00, #ff8800);
+            background: #e67600;
         }
 
         .btn-warning {
-            border-radius: 8px;
-        }
-
-        .btn-danger {
-            border-radius: 8px;
-        }
-
-        /* USER DROPDOWN */
-
-        .dropdown-toggle {
-            background-color: white;
-            color: #ff7b00;
-            font-weight: bold;
-            border: none;
-            border-radius: 20px;
-            padding: 6px 16px;
-        }
-
-        /* TABLES */
-
-        table {
-            background: white;
-            border-radius: 10px;
-            overflow: hidden;
-        }
-
-        .table-dark {
-            background: linear-gradient(90deg, #ff7b00, #ff9500);
             color: white;
+            font-weight: bold;
         }
 
         /* BADGES */
 
-        .badge.bg-success {
-            background-color: #28a745 !important;
+        .badge {
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 13px;
         }
 
-        .badge.bg-danger {
-            background-color: #dc3545 !important;
-        }
+        /* FIX DROPDOWN OVERLAY ISSUE */
 
-        .badge.bg-warning {
-            background-color: #ff9500 !important;
-            color: white !important;
+        .container-fluid,
+        .row,
+        .content {
+            overflow: visible !important;
         }
 
     </style>
